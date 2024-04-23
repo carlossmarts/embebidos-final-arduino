@@ -9,9 +9,11 @@ extern MFRC522 mfrc522;
 
 extern String userRFID;
 
+void setupRfid();
+
 void configureRfidUser();
 
-void checkRfidUser();
+boolean checkRfidUser();
 
 String readRFID ();
 

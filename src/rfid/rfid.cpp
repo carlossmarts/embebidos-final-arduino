@@ -6,6 +6,13 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 String userRFID = "";
 
+void setupRfid(){
+	while (!Serial);		
+	SPI.begin();			
+	mfrc522.PCD_Init();		
+	userRFID = "";
+}
+
 void configureRfidUser(){
 	Serial.println("Setear nuevo usuario");
 	while(userRFID == ""){
@@ -19,19 +26,23 @@ void configureRfidUser(){
 	}
 }
 
-void checkRfidUser(){
+boolean checkRfidUser(){
 	Serial.println("Acercar tarjeta o llavero para validar usuario");
 	String uid = "";
+	boolean isValidUser;
 	while(uid == ""){
 		uid = readRFID();
 		if(uid != ""){
 			if(uid.compareTo(userRFID) == 0){
+				isValidUser = true;
 				Serial.println("Usuario valido");
 			} else{
+				isValidUser = false;
 				Serial.println("Usuario incorrecto");
 			}
 		}
 	}
+	return isValidUser;
 }
 
 String readRFID (){
@@ -44,7 +55,7 @@ String readRFID (){
 	  }
 	  mfrc522.PICC_HaltA();
 	}
-	delay(500);
+	//delay(500);
 	return uid;
 }
 

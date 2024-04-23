@@ -1,21 +1,22 @@
 #include <Arduino.h>
+#include <Servo.h>
+#include <lock/lock.h>
 #include <rfid/rfid.h>
 
 
 void setup() {
-	Serial.begin(9600);		
-	while (!Serial);		
-	SPI.begin();			
-	mfrc522.PCD_Init();		
-
-
-	userRFID = "";
+	Serial.begin(9600);	
+	setupRfid();
+	setupLock();
 }
 
 void loop(){
+
 	if(userRFID == ""){
 		configureRfidUser();
+		lockAction(close);
 	} else {
-		checkRfidUser();
+		boolean isValidUser = checkRfidUser();
+		triggerLock(isValidUser);
 	}
 }
